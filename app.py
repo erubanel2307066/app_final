@@ -8,11 +8,25 @@ def agregar_tarea():
         listbox_tasks.insert(tk.END, tarea)
         entry_task.delete(0, tk.END)
         
-#creamos la funcion eleminr tarea 
+#creamos la funcion eliminar tarea 
 def eliminar_tarea():
     try:
         selected_task_index = listbox_tasks.curselection()[0]
         listbox_tasks.delete(selected_task_index)
+    except IndexError:
+        pass
+
+# Funcion para marcar una tarea como completada
+def completar_tarea():
+    try:
+        selected_task_index = listbox_tasks.curselection()[0]
+        tarea = listbox_tasks.get(selected_task_index)
+
+        # Marcar como completada añadiendo "✔️" al inicio y cambiando color
+        if not tarea.startswith("✔️"):
+            listbox_tasks.delete(selected_task_index)
+            listbox_tasks.insert(selected_task_index, f"✔️ {tarea}")
+            listbox_tasks.itemconfig(selected_task_index, {'fg': 'gray'})
     except IndexError:
         pass
 
@@ -24,7 +38,7 @@ root.geometry("500x600")
 # Cargar la imagen del logo (asegurate de que el archivo PNG este en la misma carpeta o proporciona la ruta completa)
 logo_image = PhotoImage(file="GACEEnt2.png")  # Asegurate de cambiar 'ruta_del_logo.png' por la ruta de tu archivo PNG
 
-# Añadir la imagen del logo en un Label y centrarlo en la parte superior
+# Añadir la imagen del logo en un etiqueta y centrarlo en la parte superior
 logo_label = tk.Label(root, image=logo_image)
 logo_label.grid(row=25, column=0, columnspan=2, pady=10)
 
@@ -43,6 +57,10 @@ listbox_tasks.grid(row=2, column=0, columnspan=2, pady=10)
 # Boton para eliminar tareas con color de fondo y texto
 btn_delete = tk.Button(root, text="Eliminar Tarea", command=eliminar_tarea, bg="#f44336", fg="white")
 btn_delete.grid(row=3, column=0, columnspan=2, pady=10)
+
+# Boton para marcar tarea como completada
+btn_complete = tk.Button(root, text="Tarea Completa", command=completar_tarea, bg="#2196F3", fg="white")
+btn_complete.grid(row=4, column=0, columnspan=2, pady=10)
 
 # Hacer que la ventana sea responsiva
 root.columnconfigure(0, weight=1)
